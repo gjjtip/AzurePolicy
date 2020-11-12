@@ -1,0 +1,44 @@
+{
+ "properties": {
+  "displayName": "jaydisk",
+  "policyType": "Custom",
+  "mode": "All",
+  "description": "jaydisk",
+  "metadata": {
+   "createdBy": "e87fbfa0-423e-44c1-bd4f-c7327f040446",
+   "createdOn": "2020-09-29T05:58:05.1924504Z",
+   "updatedBy": "e87fbfa0-423e-44c1-bd4f-c7327f040446",
+   "updatedOn": "2020-10-27T08:39:59.0019496Z"
+  },
+  "parameters": {
+   "eff": {
+    "type": "String",
+    "metadata": {
+     "displayName": "EffectName",
+     "description": "EffectDescription"
+    },
+    "defaultValue": "deny"
+   }
+  },
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "field": "type",
+      "equals": "Microsoft.Compute/disks"
+     },
+     {
+      "field": "Microsoft.Compute/disks/sku.name",
+      "like": "Premium*"
+     }
+    ]
+   },
+   "then": {
+    "effect": "[parameters('eff')]"
+   }
+  }
+ },
+ "id": "/subscriptions/a2d49d28-b5b1-48fe-83dc-ada50a035a99/providers/Microsoft.Authorization/policyDefinitions/d6d718c5-a41d-4bf0-8ccb-3ca6481658f2",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "d6d718c5-a41d-4bf0-8ccb-3ca6481658f2"
+}

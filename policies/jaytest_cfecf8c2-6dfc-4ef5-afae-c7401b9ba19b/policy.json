@@ -1,0 +1,103 @@
+{
+ "properties": {
+  "displayName": "jaytest",
+  "policyType": "Custom",
+  "mode": "All",
+  "description": "jaytest",
+  "metadata": {
+   "createdBy": "e87fbfa0-423e-44c1-bd4f-c7327f040446",
+   "createdOn": "2020-09-10T10:04:17.2116997Z",
+   "updatedBy": "e87fbfa0-423e-44c1-bd4f-c7327f040446",
+   "updatedOn": "2020-09-20T07:52:51.8119767Z"
+  },
+  "parameters": {
+   "VirtualNetworkName": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Virtual Network Name",
+     "description": "The name of the virtual network"
+    }
+   },
+   "VirtualNetworkResourceGroup": {
+    "type": "String",
+    "metadata": {
+     "displayName": "Virtual Network resource group",
+     "description": "The name of the virtual network resource group"
+    }
+   }
+  },
+  "policyRule": {
+   "if": {
+    "allOf": [
+     {
+      "field": "type",
+      "equals": "Microsoft.Web/sites"
+     },
+     {
+      "field": "kind",
+      "notEquals": "functionapp"
+     }
+    ]
+   },
+   "then": {
+    "effect": "deployIfNotExists",
+    "details": {
+     "type": "Microsoft.Web/sites/virtualNetworkConnections",
+     "roleDefinitionIds": [
+      "/providers/Microsoft.Authorization/roleDefinitions/b24988ac-6180-42a0-ab88-20f7382dd24c"
+     ],
+     "existenceCondition": {
+      "field": "Microsoft.Web/sites/virtualnetworkconnections/vnetResourceId",
+      "exists": "true"
+     },
+     "deployment": {
+      "properties": {
+       "mode": "incremental",
+       "template": {
+        "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+        "contentVersion": "1.0.0.0",
+        "parameters": {
+         "virtualNetworkName": {
+          "type": "string"
+         },
+         "virtualNetworkResourceGroup": {
+          "type": "string"
+         },
+         "webAppName": {
+          "type": "string"
+         }
+        },
+        "resources": [
+         {
+          "name": "[concat(parameters('webAppName'), '/', 'virtualNetwork')]",
+          "type": "Microsoft.Web/sites/networkConfig",
+          "apiVersion": "2018-02-01",
+          "properties": {
+           "subnetResourceId": "/subscriptions/a2d49d28-b5b1-48fe-83dc-ada50a035a99/resourceGroups/JayGongRG/providers/Microsoft.Network/virtualNetworks/testvnet/subnets/jayvnet1",
+           "swiftSupported": true
+          }
+         }
+        ],
+        "outputs": {}
+       },
+       "parameters": {
+        "virtualNetworkName": {
+         "value": "[parameters('VirtualNetworkName')]"
+        },
+        "virtualNetworkResourceGroup": {
+         "value": "[parameters('VirtualNetworkResourceGroup')]"
+        },
+        "webAppName": {
+         "value": "[field('name')]"
+        }
+       }
+      }
+     }
+    }
+   }
+  }
+ },
+ "id": "/subscriptions/a2d49d28-b5b1-48fe-83dc-ada50a035a99/providers/Microsoft.Authorization/policyDefinitions/cfecf8c2-6dfc-4ef5-afae-c7401b9ba19b",
+ "type": "Microsoft.Authorization/policyDefinitions",
+ "name": "cfecf8c2-6dfc-4ef5-afae-c7401b9ba19b"
+}
